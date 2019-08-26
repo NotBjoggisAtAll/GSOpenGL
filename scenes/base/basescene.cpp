@@ -47,21 +47,21 @@ void BaseScene::Render()
 {
     m_ActiveCamera->Tick();
 
-    m_DefaultLight->GetShader()->use();
-    m_DefaultLight->GetShader()->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
+    m_DefaultLight->m_Material->m_Shader->use();
+    m_DefaultLight->m_Material->m_Shader->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
     m_DefaultLight->Render();
 
-    m_Axis->GetShader()->use();
-    m_Axis->GetShader()->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
+    m_Axis->m_Material->m_Shader->use();
+    m_Axis->m_Material->m_Shader->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
     m_Axis->Render();
 
     for(auto& Object : m_Objects)
     {
-        Object->GetShader()->use();
-        Object->GetShader()->setVec3("CameraPosition", m_ActiveCamera->GetPosition().constData());
-        Object->GetShader()->setVec3("light.Position", m_DefaultLight->GetPosition().constData());
-        Object->GetShader()->setVec3("light.Color", m_DefaultLight->GetColor().constData());
-        Object->GetShader()->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
+        Object->m_Material->m_Shader->use();
+        Object->m_Material->m_Shader->setVec3("CameraPosition", m_ActiveCamera->GetPosition().constData());
+        Object->m_Material->m_Shader->setVec3("light.Position", m_DefaultLight->GetPosition().constData());
+        Object->m_Material->m_Shader->setVec3("light.Color", m_DefaultLight->GetColor().constData());
+        Object->m_Material->m_Shader->setMat4("ViewMatrix", jba::Matrix4x4::transpose(m_ActiveCamera->GetViewMatrix()).constData());
         Object->Render();
     }
 }

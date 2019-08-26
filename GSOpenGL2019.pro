@@ -45,6 +45,7 @@ HEADERS += \
     Math\vector3d.h \
     Math\vector4d.h \
     Math\matrix4x4.h \
+    components/materialcomponent.h \
     vertex.h \
     camera.h \
     Scenes/Base/basescene.h \

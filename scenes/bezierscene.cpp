@@ -29,8 +29,7 @@ void BezierScene::Init()
     m_BezierCurve = CreateBezierCurve(m_PlainShader, points, 16, true, true);
     m_Sphere = CreateSphere(m_PhongShader, 3);
     m_Sphere->SetScale(.2f);
-    m_Sphere->SetColor({.4f,.3f,.6f});
-
+    m_Sphere->m_Material->m_Color = {.4f,.3f,.6f};
 }
 
 void BezierScene::Render()

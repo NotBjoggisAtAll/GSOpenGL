@@ -25,7 +25,7 @@ void HouseScene::Init()
     m_Player = CreatePlayer(CreateSphere(m_PhongShader,3));
 
     m_Cube->SetPosition(jba::Vector3D(12,0.5,0));
-    m_Cube->SetColor({1,0,1});
+    m_Cube->m_Material->m_Color = {1,0,1};
 
     m_Car = CreateObject(m_TextureShader, "coin.obj", "coinA.png");
     m_Car->SetPosition({5,0,0});

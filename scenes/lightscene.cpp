@@ -21,11 +21,11 @@ void LightScene::Init()
 
     // m_Plane = CreateHeightMapPlane(m_DirectionLightShader,QImage("../GSOpenGL2019/Data/heightmaps/bergen.png"));
    m_Plane = CreatePerlinNoisePlane(m_PointLightShader,100,100,0.5f);
-    m_Plane->SetColor({0.65f,0.3f,0.6f});
+    m_Plane->m_Material->m_Color = {0.65f,0.3f,0.6f};
     m_DefaultLight->SetPosition({25,10,25});
 
     auto Cube = CreateCube(m_DirectionLightShader);
-    Cube->SetColor({0,1,0});
+    Cube->m_Material->m_Color = {0,1,0};
     m_Player = CreatePlayer(CreateSphere(m_DirectionLightShader, 3),0.5f);
 }
 

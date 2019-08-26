@@ -41,8 +41,8 @@ void Axis::Render()
 
     m_ModelMatrix = getTransformMatrix();
 
-    m_Shader->use();
-    m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
+    m_Material->m_Shader->use();
+    m_Material->m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
 
     glBindVertexArray(m_VAO);
 

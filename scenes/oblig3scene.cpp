@@ -26,12 +26,12 @@ void Oblig3Scene::Init()
 
     //Creates a plane and set a color
     m_Plane = CreatePerlinNoisePlane(m_DirectionLightShader,50,50,1,32,5,4);
-    m_Plane->SetColor({0,0,0.5f});
+    m_Plane->m_Material->m_Color = {0,0,0.5f};
 
     //Create a player and sets some default values
     m_Player = CreatePlayer(CreateSphere(m_DirectionLightShader, 3), 0.1f);
     m_Player->SetPosition({5,0,25});
-    m_Player->GetPlayerObject()->SetColor({0.2f,1,0.8f});
+    m_Player->GetPlayerObject()->m_Material->m_Color = {0.2f,1,0.8f};
     m_Player->Init();
 
     //Points to the BezierCurve and the Trophies
@@ -52,7 +52,7 @@ void Oblig3Scene::Init()
     for (unsigned int i = 0; i < 5; ++i)
     {
         m_Walls.emplace_back(CreateCube(m_DirectionLightShader));
-        m_Walls.at(i)->SetColor({1,0,1});
+        m_Walls.at(i)->m_Material->m_Color = {1,0,1};
     }
     for (unsigned int i = 0; i < 2; ++i)
     {
@@ -71,7 +71,7 @@ void Oblig3Scene::Init()
 
     //   m_Door = CreateObject(m_DirectionLightShader, "door.obj");
     m_Door = CreateCube(m_DirectionLightShader);
-    m_Door->SetColor({1,0,0});
+    m_Door->m_Material->m_Color = {1,0,0};
     m_Door->SetPosition({50,2,25});
     m_Door->SetScale({1,5,5});
 

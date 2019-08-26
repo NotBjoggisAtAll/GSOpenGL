@@ -10,14 +10,14 @@ Object::Object(std::shared_ptr<Shader> Shader, QString ObjectFile, QString Textu
 
     if(!TextureFile.isEmpty())
     {
-        m_Texture = FileManager::GetInstance()->LoadTexture(TextureFile,MirrorHorizontally, MirrorVertically);
+        m_Material->m_Texture = FileManager::GetInstance()->LoadTexture(TextureFile,MirrorHorizontally, MirrorVertically);
         // Set nearest filtering mode for texture minification
-        m_Texture->setMinificationFilter(QOpenGLTexture::Nearest);
+        m_Material->m_Texture->setMinificationFilter(QOpenGLTexture::Nearest);
 //        // Set bilinear filtering mode for texture magnification
-        m_Texture->setMagnificationFilter(QOpenGLTexture::Linear);
+        m_Material->m_Texture->setMagnificationFilter(QOpenGLTexture::Linear);
 //        // Wrap texture coordinates by repeating
 //        // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
-        m_Texture->setWrapMode(QOpenGLTexture::Repeat);
+        m_Material->m_Texture->setWrapMode(QOpenGLTexture::Repeat);
     }
 }
 
@@ -58,18 +58,18 @@ void Object::Render()
 
     m_ModelMatrix = getTransformMatrix();
 
-    m_Shader->use();
-    m_Shader->setVec3("material.diffuse", m_Material.m_Diffuse.constData());
-    m_Shader->setVec3("material.specular", m_Material.m_Specular.constData());
-    m_Shader->setFloat("material.shininess", m_Material.m_Shininess);
+    m_Material->m_Shader->use();
+    m_Material->m_Shader->setVec3("material.diffuse", m_Material->m_Color.constData());
+    m_Material->m_Shader->setVec3("material.specular", m_Material->m_Specular.constData());
+    m_Material->m_Shader->setFloat("material.shininess", m_Material->m_Shininess);
 
-    m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
+    m_Material->m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
 
-    if(m_Texture)
+    if(m_Material->m_Texture)
     {
-        m_Shader->setInt("TextureSampler", m_Texture->textureId());
-        glActiveTexture(GL_TEXTURE0 + m_Texture->textureId());
-        glBindTexture(GL_TEXTURE_2D, m_Texture->textureId());
+        m_Material->m_Shader->setInt("TextureSampler", m_Material->m_Texture->textureId());
+        glActiveTexture(GL_TEXTURE0 + m_Material->m_Texture->textureId());
+        glBindTexture(GL_TEXTURE_2D, m_Material->m_Texture->textureId());
     }
 
     glBindVertexArray(m_VAO);
