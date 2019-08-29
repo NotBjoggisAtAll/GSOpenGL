@@ -2,14 +2,14 @@
 #define PLAYER_H
 
 #include "math/jbamath.h"
-#include "transform.h"
 #include <memory>
+#include "objects/sphere.h"
 
 class PlaneXY;
 class Shader;
 class Sphere;
 class QKeyEvent;
-class Player : public Transformable
+class Player
 {
 public:
     Player(std::shared_ptr<Sphere> mObject, float MovementSpeed=0.1f);
@@ -23,6 +23,7 @@ public:
     void KeyPressEvent(QKeyEvent *event);
     void KeyReleaseEvent(QKeyEvent *event);
 
+    void SetPosition(jba::Vector3D Position) {PlayerObject->m_Transform.Position = Position;}
 
     void SetMovementSpeed(float MovementSpeed=0.05f) { m_MovementSpeed = MovementSpeed; }
 

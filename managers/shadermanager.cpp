@@ -11,13 +11,13 @@ ShaderManager* ShaderManager::GetInstance()
 
 ShaderManager::ShaderManager()
 {
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/phong.vert", "../GSOpenGL2019/Shaders/phong.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/plainvertex.vert", "../GSOpenGL2019/Shaders/plainfragment.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/texturevertex.vert", "../GSOpenGL2019/Shaders/texturefragment.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/plainvertex.vert", "../GSOpenGL2019/Shaders/light.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/Lights/directional.vert", "../GSOpenGL2019/Shaders/Lights/directional.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/Lights/point.vert", "../GSOpenGL2019/Shaders/Lights/point.frag"));
-    m_Shaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/billboardvertex.vert", "../GSOpenGL2019/Shaders/billboardfragment.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/phong.vert", "../GSOpenGL2019/Shaders/phong.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/plainvertex.vert", "../GSOpenGL2019/Shaders/plainfragment.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/texturevertex.vert", "../GSOpenGL2019/Shaders/texturefragment.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/plainvertex.vert", "../GSOpenGL2019/Shaders/light.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/Lights/directional.vert", "../GSOpenGL2019/Shaders/Lights/directional.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/Lights/point.vert", "../GSOpenGL2019/Shaders/Lights/point.frag"));
+    mShaders.emplace_back(std::make_shared<Shader>("../GSOpenGL2019/Shaders/billboardvertex.vert", "../GSOpenGL2019/Shaders/billboardfragment.frag"));
 }
 
 ShaderManager::~ShaderManager()

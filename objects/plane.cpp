@@ -52,12 +52,12 @@ void Plane::Render()
 {
     m_ModelMatrix = getTransformMatrix();
 
-    m_Material->m_Shader->use();
-    m_Material->m_Shader->setVec3("material.diffuse", m_Material->m_Color.constData());
-    m_Material->m_Shader->setVec3("material.specular", m_Material->m_Specular.constData());
-    m_Material->m_Shader->setFloat("material.shininess", m_Material->m_Shininess);
+    m_Material->mShader->use();
+    m_Material->mShader->setVec3("material.diffuse", m_Material->m_Color.constData());
+    m_Material->mShader->setVec3("material.specular", m_Material->m_Specular.constData());
+    m_Material->mShader->setFloat("material.shininess", m_Material->m_Shininess);
 
-    m_Material->m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
+    m_Material->mShader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
 
     glBindVertexArray(m_VAO);
 

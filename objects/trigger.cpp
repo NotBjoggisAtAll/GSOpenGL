@@ -35,7 +35,7 @@ Trigger::Trigger(bool DrawTrigger) : m_DrawTrigger(DrawTrigger)
 
 void Trigger::Init()
 {
-    m_Material = new MaterialComponent(ShaderManager::GetInstance()->GetPlainShader());
+    m_Material = new MaterialComponent(ShaderManager::GetInstance()->GetPlainShader().get());
 
     initializeOpenGLFunctions();
 
@@ -71,9 +71,9 @@ void Trigger::Render()
 
     m_ModelMatrix = getTransformMatrix();
 
-    m_Material->m_Shader->use();
+    m_Material->mShader->use();
 
-    m_Material->m_Shader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
+    m_Material->mShader->setMat4("ModelMatrix", jba::Matrix4x4::transpose(*m_ModelMatrix).constData());
 
     glBindVertexArray(m_VAO);
 
