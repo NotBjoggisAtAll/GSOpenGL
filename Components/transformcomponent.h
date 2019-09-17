@@ -1,13 +1,9 @@
 #ifndef TRANSFORMCOMPONENT_H
 #define TRANSFORMCOMPONENT_H
 
-#include "component.h"
 
-struct TransformComponent : public Component
+struct Transform
 {
-    int  Parent{-1};
-    int Child{-1};
-
     gsl::Matrix4x4 mMatrix;
 };
 

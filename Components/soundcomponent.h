@@ -2,9 +2,9 @@
 #define SOUNDCOMPONENT_H
 
 #include "soundsource.h"
-struct SoundComponent
+struct Sound
 {
-    SoundSource Sound{};
+    SoundSource audio{};
 };
 
 #endif // SOUNDCOMPONENT_H

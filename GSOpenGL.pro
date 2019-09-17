@@ -20,7 +20,6 @@ win32 {
 
 HEADERS += \
     Components/allcomponents.h \
-    Components/collisioncomponent.h \
     Components/componentArray.h \
     Components/materialcomponent.h \
     Components/meshcomponent.h \

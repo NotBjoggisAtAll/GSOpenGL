@@ -1,18 +1,18 @@
 #include "soundsystem.h"
-#include "resourcemanager.h"
 #include "camera.h"
 #include "Managers/soundmanager.h"
-
+#include "World.h"
+#include "Components/allcomponents.h"
 /**
  * TODO
  * Take a look at the soundmanager and the sound system?
  * Maybe I could merge them together?
  */
 
+extern World world;
 
 SoundSystem::SoundSystem()
 {
-    Factory = ResourceManager::instance();
     SoundManager::instance();
 }
 
@@ -33,27 +33,25 @@ void SoundSystem::update(Camera* currCamera)
                 currCamera->up().getZ()};
 
     SoundManager::instance()->updateListener(cameraPos,
-                                             {},
+    {},
                                              cameraForward,
                                              cameraUp);
 
-    //Updates sound location
-    for(auto& Sound : Factory->mSoundComponents)
+    for(auto& entity : mEntities)
     {
+        auto& sound = world.GetComponent<Sound>(entity);
+        auto& transform = world.GetComponent<Transform>(entity);
 
-        auto Transform = Factory->getTransformComponent(Sound.EntityID);
-
-        //TODO Fixup gsl::Transform.mMatrix to a jba::Matrix4x4
-        jba::Vector3D pos{Transform->mMatrix.getPosition().getX(),
-                    Transform->mMatrix.getPosition().getY(),
-                    Transform->mMatrix.getPosition().getZ()};
-        Sound.Sound.setPosition(pos);
+        // TODO Fixup gsl::Transform.mMatrix to a jba::Matrix4x4
+        jba::Vector3D pos{transform.mMatrix.getPosition().getX(),
+                    transform.mMatrix.getPosition().getY(),
+                    transform.mMatrix.getPosition().getZ()};
+        sound.audio.setPosition(pos);
 
         //For now loops all the sounds - This is going to change
-        if(!Sound.Sound.isPlaying())
+        if(!sound.audio.isPlaying())
         {
-            Sound.Sound.play();
+            sound.audio.play();
         }
     }
-
 }
