@@ -3,7 +3,7 @@ QT          += core gui widgets
 TEMPLATE    = app
 CONFIG      += c++17
 
-TARGET      = INNgine2019
+TARGET      = GSOpenGL
 
 PRECOMPILED_HEADER = innpch.h
 
@@ -20,17 +20,14 @@ win32 {
 
 HEADERS += \
     Components/allcomponents.h \
-    Components/cameracomponent.h \
     Components/collisioncomponent.h \
-    Components/component.h \
-    Components/lightcomponent.h \
+    Components/componentArray.h \
     Components/materialcomponent.h \
     Components/meshcomponent.h \
     Components/physicscomponent.h \
     Components/scriptcomponent.h \
     Components/soundcomponent.h \
     Components/transformcomponent.h \
-    Entity.h \
     GSL/matrix2x2.h \
     GSL/matrix3x3.h \
     GSL/matrix4x4.h \
@@ -45,10 +42,12 @@ HEADERS += \
     JBA/vector2d.h \
     JBA/vector3d.h \
     JBA/vector4d.h \
+    Managers/componentManager.h \
     Managers/filemanager.h \
     Managers/shadermanager.h \
     Managers/soundmanager.h \
     Widgets/soundwidget.h \
+    World.h \
     constants.h \
     entitymanager.h \
     Widgets/meshwidget.h \
@@ -61,8 +60,11 @@ HEADERS += \
     Widgets/transformwidget.h \
     soundsource.h \
     soundsystem.h \
+    system.h \
+    systemManager.h \
     texture.h \
     billboard.h \
+    types.h \
     vertex.h \
     visualobject.h \
     octahedronball.h \
@@ -82,7 +84,6 @@ HEADERS += \
 
 
 SOURCES += main.cpp \
-    Components/component.cpp \
     GSL/matrix2x2.cpp \
     GSL/matrix3x3.cpp \
     GSL/matrix4x4.cpp \
@@ -95,7 +96,6 @@ SOURCES += main.cpp \
     Managers/shadermanager.cpp \
     Managers/soundmanager.cpp \
     Widgets/soundwidget.cpp \
-    entitymanager.cpp \
     Widgets/meshwidget.cpp \
     rendersystem.cpp \
     resourcefactory.cpp \
@@ -113,7 +113,6 @@ SOURCES += main.cpp \
     camera.cpp \
     octahedronball.cpp \
     trianglesurface.cpp \
-    input.cpp \
     material.cpp \
     light.cpp \
     objmesh.cpp \

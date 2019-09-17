@@ -2,7 +2,7 @@
 #define RESOURCEMANAGER_H
 
 #include "Components/allcomponents.h"
-#include "Entity.h"
+#include "types.h"
 #include <unordered_map>
 
 class ResourceFactory;

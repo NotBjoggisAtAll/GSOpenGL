@@ -3,10 +3,9 @@
 
 //This class just defines the keys we want to use for now
 //You have to set the state of this table manually!
-class Input
+struct Input
 {
-public:
-    Input();
+    Input() = delete;
 
     bool W{false};
     bool A{false};

@@ -2,7 +2,7 @@
 #define MESHWIDGET_H
 
 #include <QWidget>
-#include "Entity.h"
+#include "types.h"
 
 class MeshComponent;
 
