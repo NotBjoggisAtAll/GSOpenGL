@@ -26,7 +26,9 @@
 #include "entitymanager.h"
 #include "Managers/soundmanager.h"
 #include "soundsystem.h"
+#include "resourcemanager.h"
 #include "Components/soundcomponent.h"
+#include "World.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
@@ -115,13 +117,20 @@ void RenderWindow::init()
     glBindTexture(GL_TEXTURE_2D, mTexture[2]->id());
 
     //********************** Creating Systems *********************
+
+    world = std::make_unique<World>();
+
     mRenderSystem = new RenderSystem();
     mSoundSystem = new SoundSystem();
-    EntityManager = EntityManager::instance();
 
     //********************** Making the objects to be drawn **********************
 
-    VisualObject * temp{nullptr};
+    VisualObject * temp{nullptr}; //TODO REMVOE
+
+    Entity entity = world->createEntity();
+    entities.push_back(entity);
+
+    world->AddComponent(entity);
 
     auto Entity = EntityManager->CreateEntity("axis");
 

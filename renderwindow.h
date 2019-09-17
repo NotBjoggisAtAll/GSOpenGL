@@ -10,12 +10,17 @@
 #include "visualobject.h"
 #include "input.h"
 
+#include "types.h"
+#include <memory>
+
 class QOpenGLContext;
 class Shader;
 class MainWindow;
 class Light;
 class SoundSystem;
 class EntityManager;
+
+class World;
 
 class RenderSystem;
 /// This inherits from QWindow to get access to the Qt functionality and
@@ -39,6 +44,10 @@ public:
     RenderSystem* mRenderSystem{nullptr};
     SoundSystem* mSoundSystem{nullptr};
     EntityManager* EntityManager{nullptr};
+
+    std::unique_ptr<World> world;
+
+    std::vector<Entity> entities;
 
 private slots:
     void render();

@@ -53,7 +53,6 @@ HEADERS += \
     rendersystem.h \
     renderwindow.h \
     resourcefactory.h \
-    resourcemanager.h \
     shader.h \
     mainwindow.h \
     Widgets/transformwidget.h \
@@ -98,7 +97,6 @@ SOURCES += main.cpp \
     Widgets/meshwidget.cpp \
     rendersystem.cpp \
     resourcefactory.cpp \
-    resourcemanager.cpp \
     Widgets/transformwidget.cpp \
     soundsource.cpp \
     soundsystem.cpp \
