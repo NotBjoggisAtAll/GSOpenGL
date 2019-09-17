@@ -1,95 +1,46 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <QOpenGLFunctions_4_1_Core>
-#include <QPoint>
-#include <memory>
-#include "Math/jbamath.h"
+#include "innpch.h"
 
-class QKeyEvent;
-class QWheelEvent;
-class RenderWindow;
 class Camera
 {
 public:
-    Camera(float Pitch=0.f, float Yaw=-90.f, float Zoom=45.f);
-    ~Camera();
+    Camera();
 
-    void Tick();
-    void KeyPressEvent(QKeyEvent* event);
-    void KeyReleaseEvent(QKeyEvent *event);
-    void KeyScrollEvent(QWheelEvent *event);
+    void pitch(float degrees);
+    void yaw(float degrees);
+    void updateRightVector();
+    void updateForwardVector();
+    void update();
 
-    const jba::Matrix4x4 GetViewMatrix() const { return m_ViewMatrix; }
-    const jba::Vector3D GetPosition() const { return m_Position; }
+    gsl::Matrix4x4 mViewMatrix;
+    gsl::Matrix4x4 mProjectionMatrix;
 
-    float GetZoom() const { return m_Zoom; }
-    void  SetZoom(const float& Zoom) { m_Zoom = Zoom; }
+    void setPosition(const gsl::Vector3D &position);
 
-    void SetPosition(const jba::Vector3D &Position) { m_Position = Position; }
+    void setSpeed(float speed);
+    void updateHeigth(float deltaHeigth);
+    void moveRight(float delta);
 
-    float GetMouseSensitivity() const { return m_MouseSensitivity; }
-    void SetMouseSensitivity(const float& MouseSensitivity) { m_MouseSensitivity = MouseSensitivity; }
+    gsl::Vector3D position() const;
+    gsl::Vector3D up() const;
 
-    float GetMovementSpeed() const { return m_MovementSpeed; }
-    void SetMovementSpeed(float MovementSpeed=0.05f) { m_MovementSpeed = MovementSpeed; }
-
-    float GetPitch() const { return m_Pitch; }
-    float GetYaw() const { return m_Yaw; }
-    void SetRotation(float Pitch, float Yaw) { m_Pitch = Pitch; m_Yaw = Yaw; }
-
-    void RotationAllowed(bool Value) { m_RotationAllowed = Value; }
-    void MovementAllowed(bool Value) { m_MovementAllowed = Value; }
-
-    void SetGlobalCenter(const QPoint &GlobalCenter) { m_GlobalCenter = GlobalCenter; }
-
-    void SetRenderWindow(RenderWindow *RenderWindow) { m_RenderWindow = RenderWindow; }
-    RenderWindow* GetRenderWindow() const { return m_RenderWindow; }
-
-    void UpdateRotation(float xOffset, float yOffset);
+    gsl::Vector3D forward() const;
 
 private:
+    gsl::Vector3D mForward{0.f, 0.f, -1.f};
+    gsl::Vector3D mRight{1.f, 0.f, 0.f};
+    gsl::Vector3D mUp{0.f, 1.f, 0.f};
 
-    bool m_RotationAllowed{true};
-    bool m_MovementAllowed{true};
+    gsl::Vector3D mPosition{0.f, 0.f, 0.f};
+    float mPitch{0.f};
+    float mYaw{0.f};
 
-    void MoveForward(int Direction);
-    void MoveRight(int Direction);
-    void MoveUp(int Direction);
+    gsl::Matrix4x4 mYawMatrix;
+    gsl::Matrix4x4 mPitchMatrix;
 
-    RenderWindow* m_RenderWindow{};
-    jba::Matrix4x4 m_ViewMatrix;
-
-    jba::Vector3D m_Position;
-    jba::Vector3D m_ForwardVector;
-    jba::Vector3D m_RightVector;
-    jba::Vector3D m_UpVector;
-    const jba::Vector3D m_WorldUpVector = jba::Vector3D(0,1,0);
-
-    //Mouse pos
-    float m_LastX{};
-    float m_LastY{};
-
-    float m_MouseSensitivity = 0.2f;
-    float m_MovementSpeed = 0.05f;
-
-    float m_Zoom;
-    float m_Yaw;
-    float m_Pitch;
-
-    QPoint m_GlobalCenter{};
-
-
-    bool b_FirstMouse = true;
-    bool b_wIsPressed = false;
-    bool b_aIsPressed = false;
-    bool b_sIsPressed = false;
-    bool b_dIsPressed = false;
-    bool b_qIsPressed = false;
-    bool b_eIsPressed = false;
-
-    friend QDebug operator<<(QDebug debug, const Camera& Camera) { return debug << "Position: " << Camera.GetPosition() << "Pitch: " << Camera.GetPitch() << " Yaw: " << Camera.GetYaw(); }
-
+    float mSpeed{0.f}; //camera will move by this speed along the mForward vector
 };
 
 #endif // CAMERA_H

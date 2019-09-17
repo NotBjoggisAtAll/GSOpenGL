@@ -5,7 +5,7 @@
 #include <QString>
 #include <memory>
 #include <QOpenGLTexture>
-
+#include "constants.h"
 class Vertex;
 
 class FileManager
@@ -23,8 +23,8 @@ private:
     std::pair<std::vector<Vertex>, std::vector<unsigned int> > ReadTXTFile(const QString &File);
     std::pair<std::vector<Vertex>, std::vector<unsigned int> > ReadOBJFile(const QString &File);
 
-    const QString m_DirPath = "../GSOpenGL2019/data/Objects/";
-    const QString m_DirTexturePath = "../GSOpenGL2019/data/Textures/";
+    const QString m_DirPath = QString::fromStdString(gsl::assetFilePath) + "Meshes/";
+    const QString m_DirTexturePath = QString::fromStdString(gsl::assetFilePath) + "Textures/";
 
     FileManager();
     ~FileManager();

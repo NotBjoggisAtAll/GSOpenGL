@@ -5,6 +5,7 @@
 *.slo
 *.lo
 *.o
+#*.obj
 
 # Precompiled Headers
 *.gch
@@ -14,10 +15,6 @@
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
@@ -31,7 +28,7 @@
 *.app
 *.user
 
-# Qt-es
+# QtCreator
 /.qmake.cache
 /.qmake.stash
 *.pro.user
@@ -45,10 +42,10 @@ qrc_*.cpp
 ui_*.h
 Makefile*
 *build-*
-
-# QtCreator
-
 *.autosave
+*.user
+*.Debug
+*.Release
 
 # QtCtreator Qml
 *.qmlproject.user
@@ -59,8 +56,9 @@ CMakeLists.txt.user*
 
 #other stuff
 .DS_Store
-*.mtl
-*.user
-*.exe
-*.Debug
-*.Release
+
+#Assets
+*.bmp
+*.obj
+*.txt
+*.wav

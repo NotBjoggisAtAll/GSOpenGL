@@ -1,148 +1,98 @@
 #include "camera.h"
-#include <QCursor>
-#include <QtMath>
-#include <QKeyEvent>
-#include "Window/renderwindow.h"
 
-Camera::Camera(float Pitch, float Yaw, float Zoom) : m_Zoom(Zoom), m_Yaw(Yaw), m_Pitch(Pitch)
+Camera::Camera()
 {
-    m_Position = jba::Vector3D(0, 0, 3.0f);
-    m_ForwardVector = jba::Vector3D(0, 0, -1.f);
+    mViewMatrix.setToIdentity();
+    mProjectionMatrix.setToIdentity();
 
-    m_RightVector = m_ForwardVector ^ m_WorldUpVector;
-    m_RightVector.normalize();
-
-    m_UpVector = m_RightVector ^ m_ForwardVector;
-    m_UpVector.normalize();
-
-    m_ViewMatrix.lookAt(m_Position, m_Position + m_ForwardVector ,m_WorldUpVector);
+    mYawMatrix.setToIdentity();
+    mPitchMatrix.setToIdentity();
 }
 
-Camera::~Camera()
-{}
-
-void Camera::Tick()
+void Camera::pitch(float degrees)
 {
-    if(b_wIsPressed)
-        MoveForward(1);
-
-    if(b_sIsPressed)
-        MoveForward(-1);
-
-    if(b_aIsPressed)
-        MoveRight(-1);
-
-    if(b_dIsPressed)
-        MoveRight(1);
-
-    if(b_qIsPressed)
-        MoveUp(1);
-
-    if(b_eIsPressed)
-        MoveUp(-1);
-
-    m_ViewMatrix.setToIdentity();
-    m_ViewMatrix.lookAt(m_Position, m_Position + m_ForwardVector, m_WorldUpVector);
-
+    //  rotate around mRight
+    mPitch -= degrees;
+    updateForwardVector();
 }
 
-void Camera::UpdateRotation(float xOffset, float yOffset)
+void Camera::yaw(float degrees)
 {
-
-    xOffset *= m_MouseSensitivity;
-    yOffset *= m_MouseSensitivity;
-
-    if(m_RotationAllowed)
-    {
-        m_Yaw += xOffset;
-        m_Pitch += yOffset;
-    }
-
-    if(m_Pitch > 89.0f)
-        m_Pitch = 89.f;
-
-    if(m_Pitch < -89.f)
-        m_Pitch = -89.f;
-
-    m_ForwardVector.setX(static_cast<float>(qCos(qDegreesToRadians(static_cast<double>(m_Yaw))) * qCos(qDegreesToRadians(static_cast<double>(m_Pitch)))));
-    m_ForwardVector.setY(static_cast<float>(qSin(qDegreesToRadians(static_cast<double>(m_Pitch)))));
-    m_ForwardVector.setZ(static_cast<float>(qSin(qDegreesToRadians(static_cast<double>(m_Yaw))) * qCos(qDegreesToRadians(static_cast<double>(m_Pitch)))));
-
-    m_ForwardVector.normalize();
-
-    m_RightVector = m_ForwardVector ^ m_WorldUpVector;
-    m_RightVector.normalize();
-
-    m_UpVector = m_RightVector ^ m_ForwardVector;
-    m_UpVector.normalize();
+    // rotate around mUp
+    mYaw -= degrees;
+    updateForwardVector();
 }
 
-void Camera::KeyPressEvent(QKeyEvent* event)
+void Camera::updateRightVector()
 {
-    if(m_MovementAllowed)
-    {
-        if(event->key() == Qt::Key_Q)
-            b_qIsPressed = true;
-
-        if(event->key() == Qt::Key_E)
-            b_eIsPressed = true;
-
-        if(event->key() == Qt::Key_W)
-            b_wIsPressed = true;
-
-        if(event->key() == Qt::Key_S)
-            b_sIsPressed = true;
-
-        if(event->key() == Qt::Key_A)
-            b_aIsPressed = true;
-
-        if(event->key() == Qt::Key_D)
-            b_dIsPressed = true;
-    }
+    mRight = mForward^mUp;
+    mRight.normalize();
+//    qDebug() << "Right " << mRight;
 }
 
-void Camera::KeyReleaseEvent(QKeyEvent* event)
+void Camera::updateForwardVector()
 {
-    if(event->key() == Qt::Key_Q)
-        b_qIsPressed = false;
+    mRight = gsl::Vector3D(1.f, 0.f, 0.f);
+    mRight.rotateY(mYaw);
+    mRight.normalize();
+    mUp = gsl::Vector3D(0.f, 1.f, 0.f);
+    mUp.rotateX(mPitch);
+    mUp.normalize();
+    mForward = mUp^mRight;
 
-    if(event->key() == Qt::Key_E)
-        b_eIsPressed = false;
-
-    if(event->key() == Qt::Key_W)
-        b_wIsPressed = false;
-
-    if(event->key() == Qt::Key_S)
-        b_sIsPressed = false;
-
-    if(event->key() == Qt::Key_A)
-        b_aIsPressed = false;
-
-    if(event->key() == Qt::Key_D)
-        b_dIsPressed = false;
+    updateRightVector();
 }
 
-void Camera::KeyScrollEvent(QWheelEvent* event)
+void Camera::update()
 {
-    if(m_Zoom >= 1.0f && m_Zoom <= 45.0f)
-        m_Zoom -= event->delta()/64;
-    if(m_Zoom <= 1.0f)
-        m_Zoom = 1.0f;
-    if(m_Zoom >= 45.0f)
-        m_Zoom = 45.0f;
+    mYawMatrix.setToIdentity();
+    mPitchMatrix.setToIdentity();
+
+    mPitchMatrix.rotateX(mPitch);
+    mYawMatrix.rotateY(mYaw);
+
+    mPosition -= mForward * mSpeed;
+
+    mViewMatrix = mPitchMatrix* mYawMatrix;
+    mViewMatrix.translate(-mPosition);
 }
 
-void Camera::MoveForward(int Direction)
+void Camera::setPosition(const gsl::Vector3D &position)
 {
-    m_Position += m_ForwardVector * Direction * m_MovementSpeed;
+    mPosition = position;
 }
 
-void Camera::MoveRight(int Direction)
+void Camera::setSpeed(float speed)
 {
-    m_Position += m_RightVector * m_MovementSpeed * Direction;
+    mSpeed = speed;
 }
 
-void Camera::MoveUp(int Direction)
+void Camera::updateHeigth(float deltaHeigth)
 {
-    m_Position += m_WorldUpVector * Direction * m_MovementSpeed;
+    mPosition.y += deltaHeigth;
+}
+
+void Camera::moveRight(float delta)
+{
+    //This fixes a bug in the up and right calculations
+    //so camera always holds its height when straifing
+    //should be fixed thru correct right calculations!
+    gsl::Vector3D right = mRight;
+    right.y = 0.f;
+    mPosition += right * delta;
+}
+
+gsl::Vector3D Camera::position() const
+{
+    return mPosition;
+}
+
+gsl::Vector3D Camera::up() const
+{
+    return mUp;
+}
+
+gsl::Vector3D Camera::forward() const
+{
+    return mForward;
 }

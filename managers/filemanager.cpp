@@ -3,6 +3,7 @@
 #include "vertex.h"
 #include <QString>
 #include <QFile>
+#include "JBA/jbamath.h"
 
 FileManager* FileManager::m_Instance = nullptr;
 
@@ -123,7 +124,7 @@ std::pair<std::vector<Vertex>,std::vector<unsigned int>> FileManager::ReadOBJFil
                     TempIndices.push_back(IndiceList.takeFirst().toUInt());
 
                 if((static_cast<int>(TempIndices.at(1)) - 1) <= 0)
-                    Vertices.emplace_back(Position.at(TempIndices.at(0) - 1), Normals.at(TempIndices.at(2) - 1));
+                    Vertices.emplace_back(Position.at(TempIndices.at(0) - 1), Normals.at(TempIndices.at(2) - 1),jba::Vector2D());
                 else
                     Vertices.emplace_back(Position.at(TempIndices.at(0) - 1), Normals.at(TempIndices.at(2) - 1), Texture.at(TempIndices.at(1) - 1));
 
