@@ -1,7 +1,5 @@
 #include "resourcefactory.h"
-#include "vertex.h"
 #include "octahedronball.h"
-
 
 Mesh ResourceFactory::loadMesh(std::string filePath)
 {

@@ -9,6 +9,15 @@
 class World
 {
 public:
+
+    static World* getWorld()
+    {
+        if(instance == nullptr)
+            instance = new World();
+
+        return instance;
+    }
+
     void Init()
     {
         // Create pointers to each manager
@@ -92,10 +101,15 @@ public:
     }
 
 private:
+
+    static World* instance;
+    World(){Init();}
+
     std::unique_ptr<ComponentManager> mComponentManager;
     std::unique_ptr<EntityManager> mEntityManager;
     std::unique_ptr<SystemManager> mSystemManager;
 
 };
+
 
 #endif // WORLD_H

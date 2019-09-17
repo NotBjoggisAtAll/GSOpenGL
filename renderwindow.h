@@ -7,7 +7,6 @@
 #include <chrono>
 #include "texture.h"
 #include "camera.h"
-#include "visualobject.h"
 #include "input.h"
 
 #include "types.h"
@@ -20,6 +19,7 @@ class Light;
 class SoundSystem;
 class EntityManager;
 
+class ResourceFactory;
 class World;
 
 class RenderSystem;
@@ -41,11 +41,13 @@ public:
 
     void checkForGLerrors();
 
-    RenderSystem* mRenderSystem{nullptr};
-    SoundSystem* mSoundSystem{nullptr};
-    EntityManager* EntityManager{nullptr};
 
-    std::unique_ptr<World> world;
+    std::shared_ptr<RenderSystem> mRenderSystem;
+    std::shared_ptr<SoundSystem> mSoundSystem;
+
+    World* world;
+    std::unique_ptr<ResourceFactory> resourceFactory;
+
 
     std::vector<Entity> entities;
 
@@ -64,9 +66,6 @@ private:
 
     Texture *mTexture[4]{nullptr}; //We can hold 4 textures
 
-    std::vector<VisualObject*> mVisualObjects;
-
-    VisualObject *mPlayer;  //the controllable object
     Light *mLight;
 
     Camera *mCurrentCamera{nullptr};

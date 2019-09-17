@@ -7,15 +7,6 @@
 #include <vector>
 #include "vertex.h"
 
-enum class MeshType{
-    Billboard,
-    XYZ,
-    Cube,
-    Sphere,
-    OBJ,
-    TXT
-};
-
 class ResourceFactory : public QOpenGLFunctions_4_1_Core
 {
 public:
@@ -35,15 +26,12 @@ private:
     void openGLVertexBuffers();
     void openGLIndexBuffer();
 
-
     void createPlane();
     void createSphere();
     void createAxis();
     void createSkybox();
     void createObject(std::string filePath);
     void readTXTFile(std::string filename);
-
-
 
 };
 

@@ -9,8 +9,10 @@
 #include "Widgets/meshwidget.h"
 #include "Widgets/soundwidget.h"
 #include "renderwindow.h"
-#include "resourcemanager.h"
-#include "entitymanager.h"
+
+#include "World.h"
+
+extern World world;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
@@ -27,32 +29,32 @@ MainWindow::~MainWindow()
 
 void MainWindow::DisplayEntitesInOutliner()
 {
-    ui->Outliner->clear();
-    for(auto& Entity : EntityManager::instance()->mEntities)
-    {
-        auto Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
-        if(Transform)
-            if(Transform->Parent != -1)
-                continue;
+//    ui->Outliner->clear();
+//    for(auto& Entity : world.EntityManager::instance()->mEntities)
+//    {
+//        auto Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
+//        if(Transform)
+//            if(Transform->Parent != -1)
+//                continue;
 
-        QTreeWidgetItem* item = new QTreeWidgetItem();
-        QTreeWidgetItem* childWidget{nullptr};
+//        QTreeWidgetItem* item = new QTreeWidgetItem();
+//        QTreeWidgetItem* childWidget{nullptr};
 
-        item->setText(0, QString::fromStdString(Entity.second));
-        item->setText(1, QString::number(Entity.first));
-        ui->Outliner->addTopLevelItem(item);
+//        item->setText(0, QString::fromStdString(Entity.second));
+//        item->setText(1, QString::number(Entity.first));
+//        ui->Outliner->addTopLevelItem(item);
 
-        Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
-        if(Transform)
-            if(Transform->Child != -1)
-            {
-                childWidget = new QTreeWidgetItem();
-                auto child = EntityManager::instance()->mEntities.find(Transform->Child);
-                childWidget->setText(0, QString::fromStdString(child->second));
-                childWidget->setText(1, QString::number(child->first));
-                item->addChild(childWidget);
-            }
-    }
+//        Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
+//        if(Transform)
+//            if(Transform->Child != -1)
+//            {
+//                childWidget = new QTreeWidgetItem();
+//                auto child = EntityManager::instance()->mEntities.find(Transform->Child);
+//                childWidget->setText(0, QString::fromStdString(child->second));
+//                childWidget->setText(1, QString::number(child->first));
+//                item->addChild(childWidget);
+//            }
+//    }
 }
 
 void MainWindow::init()
@@ -131,24 +133,24 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::updateComponentWidgets(unsigned int EntityID)
 {
-    if(widget)
-        delete widget;
+//    if(widget)
+//        delete widget;
 
-    widget = new QWidget();
-    ui->scrollArea->setWidget(widget);
-    QVBoxLayout* layout = new QVBoxLayout();
-    widget->setLayout(layout);
+//    widget = new QWidget();
+//    ui->scrollArea->setWidget(widget);
+//    QVBoxLayout* layout = new QVBoxLayout();
+//    widget->setLayout(layout);
 
-    auto Manager = ResourceManager::instance();
+//    auto Manager = ResourceManager::instance();
 
-    if(Manager->getTransformComponent(EntityID))
-        layout->addWidget(new TransformWidget(EntityID));
+//    if(Manager->getTransformComponent(EntityID))
+//        layout->addWidget(new TransformWidget(EntityID));
 
-    if(Manager->getMeshComponent(EntityID))
-        layout->addWidget(new MeshWidget(EntityID));
+//    if(Manager->getMeshComponent(EntityID))
+//        layout->addWidget(new MeshWidget(EntityID));
 
-    if(Manager->getSoundComponent(EntityID))
-        layout->addWidget(new SoundWidget(EntityID));
+//    if(Manager->getSoundComponent(EntityID))
+//        layout->addWidget(new SoundWidget(EntityID));
 }
 
 void MainWindow::on_Outliner_itemDoubleClicked(QTreeWidgetItem *item, int column)

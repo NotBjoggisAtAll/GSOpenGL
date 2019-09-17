@@ -4,7 +4,7 @@
 #include <QWidget>
 #include "types.h"
 
-class MeshComponent;
+class Mesh;
 
 namespace Ui {
 class MeshWidget;
@@ -15,7 +15,7 @@ class MeshWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MeshWidget(Entity EntityID, QWidget *parent = nullptr);
+    explicit MeshWidget(Entity entity, QWidget *parent = nullptr);
     ~MeshWidget();
 
 private slots:
@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::MeshWidget *ui;
-    MeshComponent* Component = {nullptr};
+    Mesh* Component = {nullptr};
 };
 
 #endif // MESHWIDGET_H

@@ -61,20 +61,13 @@ HEADERS += \
     system.h \
     systemManager.h \
     texture.h \
-    billboard.h \
     types.h \
     vertex.h \
-    visualobject.h \
     octahedronball.h \
-    billboard.h \
     camera.h \
     octahedronball.h \
     gltypes.h \
-    trianglesurface.h \
     input.h \
-    material.h \
-    light.h \
-    objmesh.h \
     innpch.h \
     colorshader.h \
     textureshader.h \
@@ -95,6 +88,7 @@ SOURCES += main.cpp \
     Managers/soundmanager.cpp \
     Widgets/soundwidget.cpp \
     Widgets/meshwidget.cpp \
+    World.cpp \
     rendersystem.cpp \
     resourcefactory.cpp \
     Widgets/transformwidget.cpp \
@@ -105,14 +99,8 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     shader.cpp \
     texture.cpp \
-    billboard.cpp \
-    visualobject.cpp \
     camera.cpp \
     octahedronball.cpp \
-    trianglesurface.cpp \
-    material.cpp \
-    light.cpp \
-    objmesh.cpp \
     colorshader.cpp \
     textureshader.cpp \
     phongshader.cpp

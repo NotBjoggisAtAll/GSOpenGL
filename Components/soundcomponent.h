@@ -4,6 +4,8 @@
 #include "soundsource.h"
 struct Sound
 {
+    Sound(){}
+    Sound(SoundSource Sound) : audio(Sound){}
     SoundSource audio{};
 };
 

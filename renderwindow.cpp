@@ -10,11 +10,6 @@
 
 #include "mainwindow.h"
 
-#include "octahedronball.h"
-#include "billboard.h"
-#include "trianglesurface.h"
-#include "objmesh.h"
-#include "light.h"
 #include "colorshader.h"
 #include "textureshader.h"
 #include "phongshader.h"
@@ -26,8 +21,10 @@
 #include "entitymanager.h"
 #include "Managers/soundmanager.h"
 #include "soundsystem.h"
-#include "resourcemanager.h"
 #include "Components/soundcomponent.h"
+
+
+#include "resourcefactory.h"
 #include "World.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
@@ -118,88 +115,77 @@ void RenderWindow::init()
 
     //********************** Creating Systems *********************
 
-    world = std::make_unique<World>();
+    world = World::getWorld();
+    world->Init();
 
-    mRenderSystem = new RenderSystem();
-    mSoundSystem = new SoundSystem();
+    resourceFactory = std::make_unique<ResourceFactory>();
+
+    world->RegisterComponent<Transform>();
+    world->RegisterComponent<Mesh>();
+    world->RegisterComponent<Material>();
+    world->RegisterComponent<Sound>();
+
+    mRenderSystem = world->RegisterSystem<RenderSystem>();
+    mSoundSystem = world->RegisterSystem<SoundSystem>();
+
+    Signature renderSign;
+    renderSign.set(world->GetComponentType<Transform>());
+    renderSign.set(world->GetComponentType<Mesh>());
+    renderSign.set(world->GetComponentType<Material>());
+    world->SetSystemSignature<RenderSystem>(renderSign);
+
+    Signature soundSign;
+    soundSign.set(world->GetComponentType<Transform>());
+    soundSign.set(world->GetComponentType<Sound>());
+    world->SetSystemSignature<SoundSystem>(soundSign);
+
 
     //********************** Making the objects to be drawn **********************
 
-    VisualObject * temp{nullptr}; //TODO REMVOE
 
     Entity entity = world->createEntity();
     entities.push_back(entity);
 
-    world->AddComponent(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("axis"));
+    world->AddComponent(entity, Transform());
+    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
 
-    auto Entity = EntityManager->CreateEntity("axis");
+    entity = world->createEntity();
+    entities.push_back(entity);
 
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"axis");
-    EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->colorShader());
-    TransformComponent* Transform = static_cast<TransformComponent*>(EntityManager->addComponent(Entity, ComponentType::Transform));
-    Transform->mMatrix.setToIdentity();
+    world->AddComponent(entity, resourceFactory->loadMesh("skybox"));
+    world->AddComponent(entity, Transform());
+    world->AddComponent(entity, Material(ShaderManager::instance()->textureShader(),2));
 
-    Entity = EntityManager->CreateEntity("skybox");
+    auto transform = world->GetComponent<Transform>(entity);
+    transform.mMatrix.scale(15.f);
 
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"skybox");
-    MaterialComponent* Material = EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->textureShader());
-    Transform = static_cast<TransformComponent*>(EntityManager->addComponent(Entity, ComponentType::Transform));
-    Transform->mMatrix.setToIdentity();
-    Transform->mMatrix.scale(15.f);
-    Material->mTextureUnit = 2;
+    entity = world->createEntity();
+    entities.push_back(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("box2.txt"));
+    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->AddComponent(entity, Transform());
 
-    temp = new BillBoard();
-    temp->init();
-    temp->setShader(ShaderManager::instance()->textureShader());
-    temp->mMatrix.translate(4.f, 0.f, -3.5f);
-    temp->mName = "Billboard";
-    temp->mRenderWindow = this;
-    temp->mMaterial.mTextureUnit = 1;
-    temp->mMaterial.mColor = gsl::Vector3D(0.7f, 0.6f, 0.1f);
-    dynamic_cast<BillBoard*>(temp)->setConstantYUp(true);
-    mVisualObjects.push_back(temp);
-
-    mLight = new Light();
-    temp = mLight;
-    temp->init();
-    temp->setShader(ShaderManager::instance()->colorShader());
-    temp->mMatrix.translate(2.5f, 3.f, 0.f);
-    temp->mName = "light";
-    temp->mRenderWindow = this;
-    temp->mMaterial.mTextureUnit = 0;
-    temp->mMaterial.mColor = gsl::Vector3D(0.1f, 0.1f, 0.8f);
-    mVisualObjects.push_back(temp);
-
-    ShaderManager::instance()->phongShader()->setLight(mLight);
-
-    Entity = EntityManager->CreateEntity("BoxBox");
-
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"box2.txt");
-    EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->colorShader());
-    Transform = static_cast<TransformComponent*>(EntityManager->addComponent(Entity, ComponentType::Transform));
-
-    Transform->mMatrix.rotateY(180.f);
-
-    auto Box = Entity;
-
-    Entity = EntityManager->CreateEntity("Monkiii");
-
-    EntityManager->addComponent(Entity, ComponentType::Mesh, "monkey.obj");
-    Material = EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->phongShader());
-    Transform = static_cast<TransformComponent*>(EntityManager->addComponent(Entity, ComponentType::Transform));
+    transform = world->GetComponent<Transform>(entity);
+    transform.mMatrix.rotateY(180.f);
 
 
-    Transform->mMatrix.scale(0.5f);
-    Transform->mMatrix.translate(3.f, 2.f, -2.f);
+    entity = world->createEntity();
+    entities.push_back(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("monkey.obj"));
+    world->AddComponent(entity, Material(ShaderManager::instance()->phongShader()));
+    world->AddComponent(entity, Transform());
 
+    transform = world->GetComponent<Transform>(entity);
+    transform.mMatrix.scale(0.5f);
+    transform.mMatrix.translate(3.f, 2.f, -2.f);
 
-    EntityManager->addChild(Entity, Box);
+   // entity = world->createEntity();
+   // entities.push_back(entity);
 
+  //  world->AddComponent(entity, Transform());
+  //  world->AddComponent(entity, Sound(*SoundManager::instance()->createSource("Caravan",{}, "caravan_mono.wav", true, .5f)));
 
-
-    Entity = EntityManager->CreateEntity("Caravan");
-    EntityManager->addComponent(Entity, ComponentType::Transform);
-    EntityManager->addComponent(Entity, ComponentType::Sound, "caravan_mono.wav", true, .5f);
 
     //********************** System stuff **********************
 
@@ -241,12 +227,6 @@ void RenderWindow::render()
     //to clear the screen for each redraw
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-    for (auto visObject: mVisualObjects)
-    {
-        visObject->draw();
-        //        checkForGLerrors();
-    }
 
     mRenderSystem->Render();
 
@@ -414,18 +394,18 @@ void RenderWindow::handleInput()
     }
     else
     {
-        if(mInput.W)
-            mLight->mMatrix.translateZ(-mCameraSpeed);
-        if(mInput.S)
-            mLight->mMatrix.translateZ(mCameraSpeed);
-        if(mInput.D)
-            mLight->mMatrix.translateX(mCameraSpeed);
-        if(mInput.A)
-            mLight->mMatrix.translateX(-mCameraSpeed);
-        if(mInput.Q)
-            mLight->mMatrix.translateY(mCameraSpeed);
-        if(mInput.E)
-            mLight->mMatrix.translateY(-mCameraSpeed);
+//        if(mInput.W)
+//            mLight->mMatrix.translateZ(-mCameraSpeed);
+//        if(mInput.S)
+//            mLight->mMatrix.translateZ(mCameraSpeed);
+//        if(mInput.D)
+//            mLight->mMatrix.translateX(mCameraSpeed);
+//        if(mInput.A)
+//            mLight->mMatrix.translateX(-mCameraSpeed);
+//        if(mInput.Q)
+//            mLight->mMatrix.translateY(mCameraSpeed);
+//        if(mInput.E)
+//            mLight->mMatrix.translateY(-mCameraSpeed);
     }
 }
 
@@ -597,28 +577,60 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 
 void RenderWindow::spawnCube()
 {
-    auto Entity = EntityManager->CreateEntity("Cube");
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"box2.txt");
-    EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->phongShader());
-    EntityManager->addComponent(Entity, ComponentType::Transform);
+    auto entity = world->createEntity();
+    entities.push_back(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("box2.txt"));
+    world->AddComponent(entity,Transform());
+    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+
     mMainWindow->DisplayEntitesInOutliner();
 }
 
 void RenderWindow::spawnSphere()
 {
-    auto Entity = EntityManager->CreateEntity("Sphere");
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"sphere");
-    EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->phongShader());
-    EntityManager->addComponent(Entity, ComponentType::Transform);
+    auto entity = world->createEntity();
+    entities.push_back(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("sphere"));
+    world->AddComponent(entity,Transform());
+    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+
     mMainWindow->DisplayEntitesInOutliner();
 }
 
 void RenderWindow::spawnPlane()
 {
-    auto Entity = EntityManager->CreateEntity("Plane");
-    EntityManager->addComponent(Entity, ComponentType::Mesh,"plane");
-    EntityManager->addComponent(Entity, ComponentType::Material, ShaderManager::instance()->colorShader());
-    EntityManager->addComponent(Entity, ComponentType::Transform);
+    auto entity = world->createEntity();
+    entities.push_back(entity);
+    world->AddComponent(entity, resourceFactory->loadMesh("plane"));
+    world->AddComponent(entity,Transform());
+    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+
     mMainWindow->DisplayEntitesInOutliner();
 }
 
+
+
+
+//    temp = new BillBoard();
+//    temp->init();
+//    temp->setShader(ShaderManager::instance()->textureShader());
+//    temp->mMatrix.translate(4.f, 0.f, -3.5f);
+//    temp->mName = "Billboard";
+//    temp->mRenderWindow = this;
+//    temp->mMaterial.mTextureUnit = 1;
+//    temp->mMaterial.mColor = gsl::Vector3D(0.7f, 0.6f, 0.1f);
+//    dynamic_cast<BillBoard*>(temp)->setConstantYUp(true);
+//    mVisualObjects.push_back(temp);
+
+//    mLight = new Light();
+//    temp = mLight;
+//    temp->init();
+//    temp->setShader(ShaderManager::instance()->colorShader());
+//    temp->mMatrix.translate(2.5f, 3.f, 0.f);
+//    temp->mName = "light";
+//    temp->mRenderWindow = this;
+//    temp->mMaterial.mTextureUnit = 0;
+//    temp->mMaterial.mColor = gsl::Vector3D(0.1f, 0.1f, 0.8f);
+//    mVisualObjects.push_back(temp);
+
+//   ShaderManager::instance()->phongShader()->setLight(mLight);

@@ -6,6 +6,7 @@
 struct IComponentArray
 {
     virtual ~IComponentArray() = default;
+     IComponentArray() = default;
     virtual void entityDestroyed(Entity entity) = 0;
 };
 
@@ -13,6 +14,8 @@ template <typename T>
 class ComponentArray : public IComponentArray
 {
 public:
+
+    ComponentArray(){}
 
     void insertData(Entity entity, T component)
     {
