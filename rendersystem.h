@@ -2,17 +2,13 @@
 #define RENDERSYSTEM_H
 
 #include <QOpenGLFunctions_4_1_Core>
+#include "system.h"
 
-class RenderComponent;
-class GameObject;
-class ResourceManager;
 
-struct RenderSystem : public QOpenGLFunctions_4_1_Core
+struct RenderSystem : public QOpenGLFunctions_4_1_Core, public System
 {
-    RenderSystem();
-    void Render();
 
-    ResourceManager* Factory{nullptr};
+    void Render();
 
 };
 

@@ -3,7 +3,7 @@
 
 class Shader;
 
-struct MaterialComponent
+struct Material
 {
     Shader* mShader{nullptr};
     gsl::Vector3D mColor{1,1,1};

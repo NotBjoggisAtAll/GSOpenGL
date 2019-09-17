@@ -5,7 +5,7 @@
 //You have to set the state of this table manually!
 struct Input
 {
-    Input() = delete;
+    Input() = default;
 
     bool W{false};
     bool A{false};

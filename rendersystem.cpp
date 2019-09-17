@@ -1,29 +1,35 @@
 #include "rendersystem.h"
+
+#include "World.h"
+#include "Components/meshcomponent.h"
+#include "Components/transformcomponent.h"
+#include "Components/materialcomponent.h"
 #include "shader.h"
-#include "resourcemanager.h"
-RenderSystem::RenderSystem()
-{
-    Factory = ResourceManager::instance();
-}
+
+extern World world;
 
 void RenderSystem::Render()
 {
     initializeOpenGLFunctions();
-    for(auto& Component : Factory->mMeshComponents)
+
+    for(auto& entity : mEntities)
     {
-        if(!Component.isVisible)
+        auto& mesh = world.GetComponent<Mesh>(entity);
+
+        if(!mesh.isVisible)
             continue;
-        auto Material = Factory->getMaterialComponent(Component.EntityID);
-        auto Transform = Factory->getTransformComponent(Component.EntityID);
 
-        glUseProgram(Material->mShader->getProgram());
-        glBindVertexArray(Component.mVAO );
-        Material->mShader->transmitUniformData(&Transform->mMatrix, Material);   //rendersystem should know what data is needed for each shader.
+        auto& material = world.GetComponent<Material>(entity);
+        auto& transform = world.GetComponent<Transform>(entity);
 
-        //checking if indices are used - draws accordingly with Elements or Arrays
-        if (Component.mIndiceCount > 0)
-            glDrawElements(Component.mDrawType, Component.mIndiceCount, GL_UNSIGNED_INT, nullptr);
+        glUseProgram(material.mShader->getProgram());
+        glBindVertexArray(mesh.mVAO);
+        material.mShader->transmitUniformData(&transform.mMatrix, &material);
+
+        if(mesh.mIndiceCount > 0)
+            glDrawElements(mesh.mDrawType, mesh.mIndiceCount, GL_UNSIGNED_INT, nullptr);
         else
-            glDrawArrays(Component.mDrawType, 0, Component.mVerticeCount);
+            glDrawArrays(mesh.mDrawType, 0, mesh.mVerticeCount);
+
     }
 }
