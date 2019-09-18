@@ -3,10 +3,13 @@
 
 #include <QMainWindow>
 
+#include "types.h"
+
 class QWidget;
 class RenderWindow;
 class QTreeWidgetItem;
 class World;
+
 
 namespace Ui {
 class MainWindow;
@@ -22,7 +25,7 @@ public:
 
     void DisplayEntitesInOutliner();
 
-    void updateComponentWidgets(unsigned int EntityID);
+    void updateComponentWidgets(Entity entity);
 
 signals:
 

@@ -46,7 +46,7 @@ public:
         --mSize;
     }
 
-    T& GetData(Entity entity)
+    T& getData(Entity entity)
     {
         assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component.");
 

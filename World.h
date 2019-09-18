@@ -87,7 +87,7 @@ public:
     template<typename T>
     T& getComponent(Entity entity)
     {
-        return mComponentManager->GetComponent<T>(entity);
+        return mComponentManager->getComponent<T>(entity);
     }
 
     template<typename T>

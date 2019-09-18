@@ -32,7 +32,6 @@ void MainWindow::DisplayEntitesInOutliner()
     for(auto Entity : world->getEntities())
     {
         QTreeWidgetItem* item = new QTreeWidgetItem();
-        QTreeWidgetItem* childWidget{nullptr};
 
         item->setText(0, QString::fromStdString(Entity.second));
         item->setText(1, QString::number(Entity.first));
@@ -114,26 +113,27 @@ void MainWindow::on_actionExit_triggered()
 }
 
 
-void MainWindow::updateComponentWidgets(unsigned int EntityID)
+void MainWindow::updateComponentWidgets(Entity entity)
 {
-//    if(widget)
-//        delete widget;
+    if(widget)
+        delete widget;
 
-//    widget = new QWidget();
-//    ui->scrollArea->setWidget(widget);
-//    QVBoxLayout* layout = new QVBoxLayout();
-//    widget->setLayout(layout);
+    widget = new QWidget();
+    ui->scrollArea->setWidget(widget);
+    QVBoxLayout* layout = new QVBoxLayout();
+    widget->setLayout(layout);
 
-//    auto Manager = ResourceManager::instance();
+    Transform* transform = &world->getComponent<Transform>(entity);
+    if(transform)
+        layout->addWidget(new TransformWidget(entity));
 
-//    if(Manager->getTransformComponent(EntityID))
-//        layout->addWidget(new TransformWidget(EntityID));
+    Mesh* mesh = &world->getComponent<Mesh>(entity);
+    if(mesh)
+        layout->addWidget(new MeshWidget(entity));
 
-//    if(Manager->getMeshComponent(EntityID))
-//        layout->addWidget(new MeshWidget(EntityID));
-
-//    if(Manager->getSoundComponent(EntityID))
-//        layout->addWidget(new SoundWidget(EntityID));
+    Sound* sound = &world->getComponent<Sound>(entity);
+    if(sound)
+        layout->addWidget(new SoundWidget(entity));
 }
 
 void MainWindow::on_Outliner_itemDoubleClicked(QTreeWidgetItem *item, int column)
