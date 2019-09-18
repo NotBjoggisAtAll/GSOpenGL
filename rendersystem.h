@@ -11,7 +11,7 @@ struct RenderSystem : public QOpenGLFunctions_4_1_Core, public System
 {
 
     RenderSystem();
-    void Render();
+    void render();
 
     World* world{};
 

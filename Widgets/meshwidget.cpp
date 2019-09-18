@@ -11,7 +11,7 @@ MeshWidget::MeshWidget(Entity entity, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    Component = &World::getWorld()->GetComponent<Mesh>(entity);
+    Component = &World::getWorld()->getComponent<Mesh>(entity);
 
     ui->isVisible->setChecked(Component->isVisible);
 

@@ -6,6 +6,7 @@
 class QWidget;
 class RenderWindow;
 class QTreeWidgetItem;
+class World;
 
 namespace Ui {
 class MainWindow;
@@ -48,6 +49,8 @@ private:
     Ui::MainWindow *ui;
     QWidget *mRenderWindowContainer;
     RenderWindow *mRenderWindow;
+
+    World* world{};
 
     //Parent to all componentwidgets
     QWidget* widget{nullptr};

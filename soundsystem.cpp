@@ -38,8 +38,8 @@ void SoundSystem::update(Camera* currCamera)
 
     for(auto& entity : mEntities)
     {
-        auto& sound = world->GetComponent<Sound>(entity);
-        auto& transform = world->GetComponent<Transform>(entity);
+        auto& sound = world->getComponent<Sound>(entity);
+        auto& transform = world->getComponent<Transform>(entity);
 
         // TODO Fixup gsl::Transform.mMatrix to a jba::Matrix4x4
         jba::Vector3D pos{transform.mMatrix.getPosition().getX(),

@@ -5,6 +5,7 @@
 #include "entitymanager.h"
 #include "systemManager.h"
 #include <memory>
+#include <string>
 
 class World
 {
@@ -18,7 +19,7 @@ public:
         return instance;
     }
 
-    void Init()
+    void init()
     {
         // Create pointers to each manager
         mComponentManager = std::make_unique<ComponentManager>();
@@ -28,13 +29,18 @@ public:
 
 
     // Entity methods
-    Entity createEntity()
+    Entity createEntity(std::string Name)
     {
-        return mEntityManager->createEntity();
+        auto eId = mEntityManager->createEntity();
+        mEntityNames.insert({eId,Name});
+        return eId;
     }
 
     void destroyEntity(Entity entity)
     {
+
+        mEntityNames.erase(entity);
+
         mEntityManager->destroyEntity(entity);
 
         mComponentManager->entityDestroyed(entity);
@@ -42,16 +48,20 @@ public:
         mSystemManager->entityDestroyed(entity);
     }
 
+    std::unordered_map<Entity,std::string>& getEntities()
+    {
+        return mEntityNames;
+    }
 
     // Component methods
     template<typename T>
-    void RegisterComponent()
+    void registerComponent()
     {
         mComponentManager->registerComponent<T>();
     }
 
     template<typename T>
-    void AddComponent(Entity entity, T component)
+    void addComponent(Entity entity, T component)
     {
         mComponentManager->addComponent<T>(entity, component);
 
@@ -63,7 +73,7 @@ public:
     }
 
     template<typename T>
-    void RemoveComponent(Entity entity)
+    void removeComponent(Entity entity)
     {
         mComponentManager->removeComponent<T>(entity);
 
@@ -75,13 +85,13 @@ public:
     }
 
     template<typename T>
-    T& GetComponent(Entity entity)
+    T& getComponent(Entity entity)
     {
         return mComponentManager->GetComponent<T>(entity);
     }
 
     template<typename T>
-    ComponentType GetComponentType()
+    ComponentType getComponentType()
     {
         return mComponentManager->getComponentType<T>();
     }
@@ -89,13 +99,13 @@ public:
 
     // System methods
     template<typename T>
-    std::shared_ptr<T> RegisterSystem()
+    std::shared_ptr<T> registerSystem()
     {
         return mSystemManager->registerSystem<T>();
     }
 
     template<typename T>
-    void SetSystemSignature(Signature signature)
+    void setSystemSignature(Signature signature)
     {
         mSystemManager->setSignature<T>(signature);
     }
@@ -103,7 +113,10 @@ public:
 private:
 
     static World* instance;
-    World(){Init();}
+    World(){init();}
+
+    //Only used for UI
+    std::unordered_map<Entity,std::string> mEntityNames;
 
     std::unique_ptr<ComponentManager> mComponentManager;
     std::unique_ptr<EntityManager> mEntityManager;

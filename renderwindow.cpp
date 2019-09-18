@@ -118,75 +118,76 @@ void RenderWindow::init()
     //********************** Creating Systems *********************
 
     world = World::getWorld();
-    world->Init();
+    world->init();
 
     resourceFactory = std::make_unique<ResourceFactory>();
 
-    world->RegisterComponent<Transform>();
-    world->RegisterComponent<Mesh>();
-    world->RegisterComponent<Material>();
-    world->RegisterComponent<Sound>();
+    world->registerComponent<Transform>();
+    world->registerComponent<Mesh>();
+    world->registerComponent<Material>();
+    world->registerComponent<Sound>();
 
-    mRenderSystem = world->RegisterSystem<RenderSystem>();
-    mSoundSystem = world->RegisterSystem<SoundSystem>();
+    mRenderSystem = world->registerSystem<RenderSystem>();
+    mSoundSystem = world->registerSystem<SoundSystem>();
 
+    // Setter opp hvilke komponenter de ulike systemene trenger
     Signature renderSign;
-    renderSign.set(world->GetComponentType<Transform>());
-    renderSign.set(world->GetComponentType<Mesh>());
-    renderSign.set(world->GetComponentType<Material>());
-    world->SetSystemSignature<RenderSystem>(renderSign);
+    renderSign.set(world->getComponentType<Transform>());
+    renderSign.set(world->getComponentType<Mesh>());
+    renderSign.set(world->getComponentType<Material>());
+    world->setSystemSignature<RenderSystem>(renderSign);
 
     Signature soundSign;
-    soundSign.set(world->GetComponentType<Transform>());
-    soundSign.set(world->GetComponentType<Sound>());
-    world->SetSystemSignature<SoundSystem>(soundSign);
+    soundSign.set(world->getComponentType<Transform>());
+    soundSign.set(world->getComponentType<Sound>());
+    world->setSystemSignature<SoundSystem>(soundSign);
 
 
     //********************** Making the objects to be drawn **********************
 
 
-    Entity entity = world->createEntity();
+    Entity entity = world->createEntity("Axis");
     entities.push_back(entity);
 
-    world->AddComponent(entity, resourceFactory->loadMesh("axis"));
-    world->AddComponent(entity, Transform());
-    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->addComponent(entity, resourceFactory->loadMesh("axis"));
+    world->addComponent(entity, Transform());
+    world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
 
-    entity = world->createEntity();
+    entity = world->createEntity("Skybox");
     entities.push_back(entity);
 
-    world->AddComponent(entity, resourceFactory->loadMesh("skybox"));
-    world->AddComponent(entity, Transform());
-    world->AddComponent(entity, Material(ShaderManager::instance()->textureShader(),2));
+    world->addComponent(entity, resourceFactory->loadMesh("skybox"));
+    world->addComponent(entity, Transform());
+    world->addComponent(entity, Material(ShaderManager::instance()->textureShader(),2));
 
-    auto* transform = &world->GetComponent<Transform>(entity);
+    auto* transform = &world->getComponent<Transform>(entity);
     transform->mMatrix.scale(15.f);
 
-    entity = world->createEntity();
+    entity = world->createEntity("Box");
     entities.push_back(entity);
-    world->AddComponent(entity, resourceFactory->loadMesh("box2.txt"));
-    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
-    world->AddComponent(entity, Transform());
+    world->addComponent(entity, resourceFactory->loadMesh("box2.txt"));
+    world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->addComponent(entity, Transform());
 
-    transform = &world->GetComponent<Transform>(entity);
+    transform = &world->getComponent<Transform>(entity);
     transform->mMatrix.rotateY(180.f);
 
 
-    entity = world->createEntity();
+    entity = world->createEntity("Monkey");
     entities.push_back(entity);
-    world->AddComponent(entity, resourceFactory->loadMesh("monkey.obj"));
-    world->AddComponent(entity, Material(ShaderManager::instance()->phongShader()));
-    world->AddComponent(entity, Transform());
+    world->addComponent(entity, resourceFactory->loadMesh("monkey.obj"));
+    world->addComponent(entity, Material(ShaderManager::instance()->phongShader()));
+    world->addComponent(entity, Transform());
 
-    transform = &world->GetComponent<Transform>(entity);
+    transform = &world->getComponent<Transform>(entity);
     transform->mMatrix.scale(0.5f);
     transform->mMatrix.translate(3.f, 2.f, -2.f);
 
-    entity = world->createEntity();
+    entity = world->createEntity("Caravan");
     entities.push_back(entity);
 
-    world->AddComponent(entity, Transform());
-    world->AddComponent(entity, Sound(SoundManager::instance()->createSource("Caravan",{}, "caravan_mono.wav", true, .5f)));
+    world->addComponent(entity, Transform());
+    world->addComponent(entity, Sound(SoundManager::instance()->createSource("Caravan",{}, "caravan_mono.wav", true, .5f)));
 
 
     //********************** System stuff **********************
@@ -231,7 +232,7 @@ void RenderWindow::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    mRenderSystem->Render();
+    mRenderSystem->render();
 
     //Calculate framerate before
     // checkForGLerrors() because that takes a long time
@@ -580,33 +581,33 @@ void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 
 void RenderWindow::spawnCube()
 {
-    auto entity = world->createEntity();
+    auto entity = world->createEntity("Cube");
     entities.push_back(entity);
-    world->AddComponent(entity, resourceFactory->loadMesh("box2.txt"));
-    world->AddComponent(entity,Transform());
-    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->addComponent(entity, resourceFactory->loadMesh("box2.txt"));
+    world->addComponent(entity,Transform());
+    world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
 
     mMainWindow->DisplayEntitesInOutliner();
 }
 
 void RenderWindow::spawnSphere()
 {
-    auto entity = world->createEntity();
+    auto entity = world->createEntity("Sphere");
     entities.push_back(entity);
-    world->AddComponent(entity, resourceFactory->loadMesh("sphere"));
-    world->AddComponent(entity,Transform());
-    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->addComponent(entity, resourceFactory->loadMesh("sphere"));
+    world->addComponent(entity,Transform());
+    world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
 
     mMainWindow->DisplayEntitesInOutliner();
 }
 
 void RenderWindow::spawnPlane()
 {
-    auto entity = world->createEntity();
+    auto entity = world->createEntity("Plane");
     entities.push_back(entity);
-    world->AddComponent(entity, resourceFactory->loadMesh("plane"));
-    world->AddComponent(entity,Transform());
-    world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
+    world->addComponent(entity, resourceFactory->loadMesh("plane"));
+    world->addComponent(entity,Transform());
+    world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
 
     mMainWindow->DisplayEntitesInOutliner();
 }

@@ -10,9 +10,8 @@
 #include "Widgets/soundwidget.h"
 #include "renderwindow.h"
 
+#include "Components/allcomponents.h"
 #include "World.h"
-
-extern World world;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
@@ -29,32 +28,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::DisplayEntitesInOutliner()
 {
-//    ui->Outliner->clear();
-//    for(auto& Entity : world.EntityManager::instance()->mEntities)
-//    {
-//        auto Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
-//        if(Transform)
-//            if(Transform->Parent != -1)
-//                continue;
+    ui->Outliner->clear();
+    for(auto Entity : world->getEntities())
+    {
+        QTreeWidgetItem* item = new QTreeWidgetItem();
+        QTreeWidgetItem* childWidget{nullptr};
 
-//        QTreeWidgetItem* item = new QTreeWidgetItem();
-//        QTreeWidgetItem* childWidget{nullptr};
-
-//        item->setText(0, QString::fromStdString(Entity.second));
-//        item->setText(1, QString::number(Entity.first));
-//        ui->Outliner->addTopLevelItem(item);
-
-//        Transform = ResourceManager::instance()->getTransformComponent(Entity.first);
-//        if(Transform)
-//            if(Transform->Child != -1)
-//            {
-//                childWidget = new QTreeWidgetItem();
-//                auto child = EntityManager::instance()->mEntities.find(Transform->Child);
-//                childWidget->setText(0, QString::fromStdString(child->second));
-//                childWidget->setText(1, QString::number(child->first));
-//                item->addChild(childWidget);
-//            }
-//    }
+        item->setText(0, QString::fromStdString(Entity.second));
+        item->setText(1, QString::number(Entity.first));
+        ui->Outliner->addTopLevelItem(item);
+    }
 }
 
 void MainWindow::init()
@@ -91,7 +74,6 @@ void MainWindow::init()
 
     //We have a format for the OpenGL window, so let's make it:
     mRenderWindow = new RenderWindow(format, this);
-
     //Check if renderwindow did initialize, else prints error and quit
     if (!mRenderWindow->context()) {
         qDebug() << "Failed to create context. Can not continue. Quits application!";
@@ -117,6 +99,7 @@ void MainWindow::init()
     ui->scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     ui->scrollArea->setWidgetResizable(true);
 
+    world = World::getWorld();
 
 }
 

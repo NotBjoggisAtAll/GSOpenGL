@@ -12,19 +12,19 @@ RenderSystem::RenderSystem()
     world = World::getWorld();
 }
 
-void RenderSystem::Render()
+void RenderSystem::render()
 {
     initializeOpenGLFunctions();
 
     for(auto& entity : mEntities)
     {
-        auto* mesh = &world->GetComponent<Mesh>(entity);
+        auto* mesh = &world->getComponent<Mesh>(entity);
 
         if(!mesh->isVisible)
             continue;
 
-        auto* material = &world->GetComponent<Material>(entity);
-        auto* transform = &world->GetComponent<Transform>(entity);
+        auto* material = &world->getComponent<Material>(entity);
+        auto* transform = &world->getComponent<Transform>(entity);
 
         glUseProgram(material->mShader->getProgram());
         glBindVertexArray(mesh->mVAO);
