@@ -26,6 +26,7 @@
 
 #include "resourcefactory.h"
 #include "World.h"
+#include "shader.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
@@ -105,6 +106,7 @@ void RenderWindow::init()
     mTexture[1] = new Texture("hund.bmp", 1);
     mTexture[2] = new Texture("skybox.bmp", 2);
 
+
     //Set the textures loaded to a texture unit
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, mTexture[0]->id());
@@ -157,8 +159,8 @@ void RenderWindow::init()
     world->AddComponent(entity, Transform());
     world->AddComponent(entity, Material(ShaderManager::instance()->textureShader(),2));
 
-    auto transform = world->GetComponent<Transform>(entity);
-    transform.mMatrix.scale(15.f);
+    auto* transform = &world->GetComponent<Transform>(entity);
+    transform->mMatrix.scale(15.f);
 
     entity = world->createEntity();
     entities.push_back(entity);
@@ -166,8 +168,8 @@ void RenderWindow::init()
     world->AddComponent(entity, Material(ShaderManager::instance()->colorShader()));
     world->AddComponent(entity, Transform());
 
-    transform = world->GetComponent<Transform>(entity);
-    transform.mMatrix.rotateY(180.f);
+    transform = &world->GetComponent<Transform>(entity);
+    transform->mMatrix.rotateY(180.f);
 
 
     entity = world->createEntity();
@@ -176,15 +178,15 @@ void RenderWindow::init()
     world->AddComponent(entity, Material(ShaderManager::instance()->phongShader()));
     world->AddComponent(entity, Transform());
 
-    transform = world->GetComponent<Transform>(entity);
-    transform.mMatrix.scale(0.5f);
-    transform.mMatrix.translate(3.f, 2.f, -2.f);
+    transform = &world->GetComponent<Transform>(entity);
+    transform->mMatrix.scale(0.5f);
+    transform->mMatrix.translate(3.f, 2.f, -2.f);
 
-   // entity = world->createEntity();
-   // entities.push_back(entity);
+    entity = world->createEntity();
+    entities.push_back(entity);
 
-  //  world->AddComponent(entity, Transform());
-  //  world->AddComponent(entity, Sound(*SoundManager::instance()->createSource("Caravan",{}, "caravan_mono.wav", true, .5f)));
+    world->AddComponent(entity, Transform());
+    world->AddComponent(entity, Sound(SoundManager::instance()->createSource("Caravan",{}, "caravan_mono.wav", true, .5f)));
 
 
     //********************** System stuff **********************
@@ -199,8 +201,9 @@ void RenderWindow::init()
     //    mCurrentCamera->pitch(5.f);
 
     //new system - shader sends uniforms so needs to get the view and projection matrixes from camera
-    for(auto& Shader : ShaderManager::instance()->mShaders)
+    for(auto& Shader : ShaderManager::instance()->mShaders){
         Shader->setCurrentCamera(mCurrentCamera);
+    }
 }
 
 ///Called each frame - doing the rendering
@@ -394,18 +397,18 @@ void RenderWindow::handleInput()
     }
     else
     {
-//        if(mInput.W)
-//            mLight->mMatrix.translateZ(-mCameraSpeed);
-//        if(mInput.S)
-//            mLight->mMatrix.translateZ(mCameraSpeed);
-//        if(mInput.D)
-//            mLight->mMatrix.translateX(mCameraSpeed);
-//        if(mInput.A)
-//            mLight->mMatrix.translateX(-mCameraSpeed);
-//        if(mInput.Q)
-//            mLight->mMatrix.translateY(mCameraSpeed);
-//        if(mInput.E)
-//            mLight->mMatrix.translateY(-mCameraSpeed);
+        //        if(mInput.W)
+        //            mLight->mMatrix.translateZ(-mCameraSpeed);
+        //        if(mInput.S)
+        //            mLight->mMatrix.translateZ(mCameraSpeed);
+        //        if(mInput.D)
+        //            mLight->mMatrix.translateX(mCameraSpeed);
+        //        if(mInput.A)
+        //            mLight->mMatrix.translateX(-mCameraSpeed);
+        //        if(mInput.Q)
+        //            mLight->mMatrix.translateY(mCameraSpeed);
+        //        if(mInput.E)
+        //            mLight->mMatrix.translateY(-mCameraSpeed);
     }
 }
 

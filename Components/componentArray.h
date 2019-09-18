@@ -77,7 +77,7 @@ private:
     std::unordered_map<size_t, Entity> mIndexToEntityMap;
 
     // Total size of valid entries in the array.
-    size_t mSize;
+    size_t mSize{};
 };
 
 #endif // COMPONENTARRAY_H

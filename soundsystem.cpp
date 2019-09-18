@@ -45,12 +45,12 @@ void SoundSystem::update(Camera* currCamera)
         jba::Vector3D pos{transform.mMatrix.getPosition().getX(),
                     transform.mMatrix.getPosition().getY(),
                     transform.mMatrix.getPosition().getZ()};
-        sound.audio.setPosition(pos);
+        sound.audio->setPosition(pos);
 
         //For now loops all the sounds - This is going to change
-        if(!sound.audio.isPlaying())
+        if(!sound.audio->isPlaying())
         {
-            sound.audio.play();
+            sound.audio->play();
         }
     }
 }

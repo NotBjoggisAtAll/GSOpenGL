@@ -18,22 +18,22 @@ void RenderSystem::Render()
 
     for(auto& entity : mEntities)
     {
-        auto& mesh = world->GetComponent<Mesh>(entity);
+        auto* mesh = &world->GetComponent<Mesh>(entity);
 
-        if(!mesh.isVisible)
+        if(!mesh->isVisible)
             continue;
 
-        auto& material = world->GetComponent<Material>(entity);
-        auto& transform = world->GetComponent<Transform>(entity);
+        auto* material = &world->GetComponent<Material>(entity);
+        auto* transform = &world->GetComponent<Transform>(entity);
 
-        glUseProgram(material.mShader->getProgram());
-        glBindVertexArray(mesh.mVAO);
-        material.mShader->transmitUniformData(&transform.mMatrix, &material);
+        glUseProgram(material->mShader->getProgram());
+        glBindVertexArray(mesh->mVAO);
+        material->mShader->transmitUniformData(&transform->mMatrix, material);
 
-        if(mesh.mIndiceCount > 0)
-            glDrawElements(mesh.mDrawType, mesh.mIndiceCount, GL_UNSIGNED_INT, nullptr);
+        if(mesh->mIndiceCount > 0)
+            glDrawElements(mesh->mDrawType, mesh->mIndiceCount, GL_UNSIGNED_INT, nullptr);
         else
-            glDrawArrays(mesh.mDrawType, 0, mesh.mVerticeCount);
+            glDrawArrays(mesh->mDrawType, 0, mesh->mVerticeCount);
 
     }
 }
