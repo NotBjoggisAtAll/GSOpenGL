@@ -85,7 +85,7 @@ public:
     }
 
     template<typename T>
-    T& getComponent(Entity entity)
+    std::optional<T*> getComponent(Entity entity)
     {
         return mComponentManager->getComponent<T>(entity);
     }

@@ -36,21 +36,21 @@ void SoundSystem::update(Camera* currCamera)
                                              cameraForward,
                                              cameraUp);
 
-    for(auto& entity : mEntities)
+    for(auto const& entity : mEntities)
     {
-        auto& sound = world->getComponent<Sound>(entity);
-        auto& transform = world->getComponent<Transform>(entity);
+        auto sound = world->getComponent<Sound>(entity).value();
+        auto transform = world->getComponent<Transform>(entity).value();
 
         // TODO Fixup gsl::Transform.mMatrix to a jba::Matrix4x4
-        jba::Vector3D pos{transform.mMatrix.getPosition().getX(),
-                    transform.mMatrix.getPosition().getY(),
-                    transform.mMatrix.getPosition().getZ()};
-        sound.audio->setPosition(pos);
+        jba::Vector3D pos{transform->mMatrix.getPosition().getX(),
+                    transform->mMatrix.getPosition().getY(),
+                    transform->mMatrix.getPosition().getZ()};
+        sound->audio->setPosition(pos);
 
         //For now loops all the sounds - This is going to change
-        if(!sound.audio->isPlaying())
+        if(!sound->audio->isPlaying())
         {
-            sound.audio->play();
+            sound->audio->play();
         }
     }
 }

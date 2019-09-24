@@ -49,7 +49,7 @@ public:
     }
 
     template<typename T>
-    T& getComponent(Entity entity)
+    std::optional<T*> getComponent(Entity entity)
     {
         return getComponentArray<T>()->getData(entity);
     }

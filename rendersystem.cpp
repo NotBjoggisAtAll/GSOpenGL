@@ -6,7 +6,6 @@
 #include "Components/materialcomponent.h"
 #include "shader.h"
 
-
 RenderSystem::RenderSystem()
 {
     world = World::getWorld();
@@ -18,13 +17,13 @@ void RenderSystem::render()
 
     for(auto& entity : mEntities)
     {
-        auto* mesh = &world->getComponent<Mesh>(entity);
+        auto mesh = world->getComponent<Mesh>(entity).value();
 
         if(!mesh->isVisible)
             continue;
 
-        auto* material = &world->getComponent<Material>(entity);
-        auto* transform = &world->getComponent<Transform>(entity);
+        auto material = world->getComponent<Material>(entity).value();
+        auto transform = world->getComponent<Transform>(entity).value();
 
         glUseProgram(material->mShader->getProgram());
         glBindVertexArray(mesh->mVAO);

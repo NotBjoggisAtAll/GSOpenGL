@@ -123,15 +123,15 @@ void MainWindow::updateComponentWidgets(Entity entity)
     QVBoxLayout* layout = new QVBoxLayout();
     widget->setLayout(layout);
 
-    Transform* transform = &world->getComponent<Transform>(entity);
+    Transform* transform = world->getComponent<Transform>(entity).value_or(nullptr);
     if(transform)
         layout->addWidget(new TransformWidget(entity));
 
-    Mesh* mesh = &world->getComponent<Mesh>(entity);
+    Mesh* mesh = world->getComponent<Mesh>(entity).value_or(nullptr);
     if(mesh)
         layout->addWidget(new MeshWidget(entity));
 
-    Sound* sound = &world->getComponent<Sound>(entity);
+    Sound* sound = world->getComponent<Sound>(entity).value_or(nullptr);
     if(sound)
         layout->addWidget(new SoundWidget(entity));
 }

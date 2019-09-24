@@ -2,6 +2,7 @@
 #define COMPONENTARRAY_H
 
 #include "types.h"
+#include <optional>
 
 struct IComponentArray
 {
@@ -46,11 +47,15 @@ public:
         --mSize;
     }
 
-    T& getData(Entity entity)
+    std::optional<T*> getData(Entity entity)
     {
-        assert(mEntityToIndexMap.find(entity) != mEntityToIndexMap.end() && "Retrieving non-existent component.");
+        if(mEntityToIndexMap.find(entity) == mEntityToIndexMap.end())
+        {
+            return {};
+        }
 
-        return mComponentArray[mEntityToIndexMap[entity]];
+
+        return &mComponentArray[mEntityToIndexMap[entity]];
     }
 
     void entityDestroyed(Entity entity) override

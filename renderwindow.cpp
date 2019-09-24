@@ -160,7 +160,7 @@ void RenderWindow::init()
     world->addComponent(entity, Transform());
     world->addComponent(entity, Material(ShaderManager::instance()->textureShader(),2));
 
-    auto* transform = &world->getComponent<Transform>(entity);
+    auto transform = world->getComponent<Transform>(entity).value();
     transform->mMatrix.scale(15.f);
 
     entity = world->createEntity("Box");
@@ -169,7 +169,7 @@ void RenderWindow::init()
     world->addComponent(entity, Material(ShaderManager::instance()->colorShader()));
     world->addComponent(entity, Transform());
 
-    transform = &world->getComponent<Transform>(entity);
+    transform = world->getComponent<Transform>(entity).value();
     transform->mMatrix.rotateY(180.f);
 
 
@@ -179,7 +179,7 @@ void RenderWindow::init()
     world->addComponent(entity, Material(ShaderManager::instance()->phongShader()));
     world->addComponent(entity, Transform());
 
-    transform = &world->getComponent<Transform>(entity);
+    transform = world->getComponent<Transform>(entity).value();
     transform->mMatrix.scale(0.5f);
     transform->mMatrix.translate(3.f, 2.f, -2.f);
 
